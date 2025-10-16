@@ -8,17 +8,18 @@ open System.Net
 
 /// CLI argument declaration
 type CliArguments =
-    // Connection params
-    | [<ExactlyOnce>] Company_Id of string // Derives TOKEN_URL
+    // Authentication parameters
     | [<ExactlyOnce>] Client_Id of string
     | [<ExactlyOnce>] Client_Secret of string
-    // Payload params
+    | [<ExactlyOnce>] Company_Id of string // Derives TOKEN_URL
+    | [<ExactlyOnce>] Url of string // Derives SCOPE
+    // Payload parameters
     | [<ExactlyOnce>] Legal_Entity of string
     | [<ExactlyOnce>] Message_Queue of string
     | [<ExactlyOnce>] Message_Type of string
-    | [<ExactlyOnce>] Url of string // Derives SCOPE
-    | [<Unique>] Mock
     | [<MainCommand; Mandatory>] Message of path: string
+    // Other parameters
+    | [<Unique>] Mock
 
     interface IArgParserTemplate with
         member s.Usage =
