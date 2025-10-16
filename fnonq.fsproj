@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <DebugType>embedded</DebugType>
+    <PackAsTool>true</PackAsTool>
+    <Author>Liam Gingrich</Author>
+    <Company>MCA Connect LLC.</Company>
+    <Description>A dotnet tool that allows you to easily send messages to a F&amp;O Message
+      Processor queue.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Argu" Version="6.2.5" />
+    <PackageReference Include="FsHttp" Version="15.0.2" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.77.1" />
+  </ItemGroup>
+
+</Project>
