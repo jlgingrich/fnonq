@@ -2,6 +2,7 @@
 
 open Argu
 open FsHttp
+open System.IO
 open Microsoft.Identity.Client
 open System.Net
 
@@ -94,12 +95,34 @@ let main argv =
 
         0
     else
+        let cacheFilePath =
+            let home = Environment.GetFolderPath Environment.SpecialFolder.ApplicationData
+            Path.Combine(home, "fnonq", "token_cache.json")
+
+        let dir = Path.GetDirectoryName cacheFilePath
+
+        if not (Directory.Exists dir) then
+            Directory.CreateDirectory dir |> ignore<DirectoryInfo>
+
         let app =
             ConfidentialClientApplicationBuilder
                 .Create(CLIENT_ID)
                 .WithClientSecret(CLIENT_SECRET)
                 .WithAuthority(AUTH_URL)
                 .Build()
+
+        app.AppTokenCache.SetBeforeAccess(fun args ->
+            let result =
+                if File.Exists cacheFilePath then
+                    File.ReadAllBytes cacheFilePath
+                else
+                    Array.empty<byte>
+
+            args.TokenCache.DeserializeMsalV3 result)
+
+        app.AppTokenCache.SetAfterAccess(fun args ->
+            if args.HasStateChanged then
+                File.WriteAllBytes(cacheFilePath, args.TokenCache.SerializeMsalV3()))
 
         let TOKEN =
             app.AcquireTokenForClient([| SCOPE |]).ExecuteAsync()
